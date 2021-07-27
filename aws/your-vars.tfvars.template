@@ -5,13 +5,9 @@ region = "us-east-1"
 cluster_name = "<YOUR-CLUSTER>"
 
 # Version of k8s used by EKS
-cluster_version = "1.18"
+cluster_version = "1.21"
 
-allowed_roles = ["<DEPLOY-ROLE>"]   
-
-rolearn = "arn:aws:iam::<account-id>:role/jupyterhub-admin"
-
-username = "jupyterhub-admin"
+username = "<DEPLOY-ROLE>"
 
 # ============================================================================================================
 
