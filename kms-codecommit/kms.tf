@@ -21,7 +21,7 @@ EOF
 
 module "s3_bucket" {
   source = "terraform-aws-modules/s3-bucket/aws"
-  version = "~> 1.17.0"
+  version = "~> 2.6.0"
 
   bucket = var.sops_s3_bucket
   acl    = "private"
