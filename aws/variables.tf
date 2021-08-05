@@ -36,11 +36,6 @@ variable "map_users" {
   ]
 }
 
-variable "rolearn" {
-  description = "ARN of the primary deployment role"
-  type = string
-}
-
 variable "username" {
   description = "The name of the primary deployment role"
   type = string
@@ -87,7 +82,7 @@ variable worker_sg_name {
 variable notebook_instance_type {
    description = "EC2 instance type used for notebook sessions."
    type = string
-   default = "t3.xlarge"
+   default = "r5.xlarge"
 }
 
 # ========================================================================
@@ -97,6 +92,6 @@ variable allowed_roles {
 
 variable cluster_version {
     description = "Kubernetes version used by the EKS module."
-    default = "1.17"
+    default = "1.21"
     type = string
 }
