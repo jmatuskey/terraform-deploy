@@ -2,7 +2,6 @@ resource "aws_kms_key" "sops_key" {
   description = "Encryption key for secrets in CodeCommit repo ${var.repo_name}-secrets"
   tags        = {
     Terraform = "True",
-    # TODO: pull this out into a variable
     Project = var.project_name
   }
 }
