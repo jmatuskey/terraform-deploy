@@ -6,14 +6,12 @@ data "aws_eks_cluster_auth" "cluster" {
   name = module.eks.cluster_id
 }
 
-data "aws_caller_identity" "current" {}
-
 data "aws_availability_zones" "available" {
 }
 
 module "eks" {
   source  = "terraform-aws-modules/eks/aws"
-  version = "~> 13.2.1"
+  version = "~> 17.1.0"
 
   cluster_name = var.cluster_name
   cluster_version = var.cluster_version
@@ -48,7 +46,7 @@ module "eks" {
       max_capacity     = 3
       min_capacity     = 1
 
-      instance_type = "t3.small"
+      instance_types = ["t3.small"]
       k8s_labels    = {
         "hub.jupyter.org/node-purpose" =  "core"
       }
@@ -61,7 +59,7 @@ module "eks" {
      max_capacity     = 10
      min_capacity     = 1
 
-     instance_type = var.notebook_instance_type
+     instance_types = [var.notebook_instance_type]
      k8s_labels = {
        "hub.jupyter.org/node-purpose" =  "user"
      }
@@ -75,8 +73,8 @@ module "eks" {
   map_users = var.map_users
 
   map_roles = concat([{
-    rolearn  = var.rolearn
-    username = var.username
+    rolearn  = local.rolearn,
+    username = var.username,
     # FIXME: Narrow these permissions down?
     groups   = ["system:masters"]
   }], var.map_roles)
@@ -94,6 +92,7 @@ data aws_iam_role "cluster_role" {
 resource "null_resource" "kubectl_config" {
   depends_on = [module.eks]
   provisioner "local-exec" {
-     command="aws eks update-kubeconfig --name ${var.cluster_name} --role-arn ${var.rolearn}"
+     command="aws eks update-kubeconfig --name ${var.cluster_name} --role-arn ${local.rolearn}"
   }
 }
+

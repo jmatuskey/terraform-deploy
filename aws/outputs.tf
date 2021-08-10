@@ -28,6 +28,10 @@ output "node_groups" {
   value       = module.eks.node_groups
 }
 
+output "rolearn" {
+   description = "EKS role arn"
+   value = local.rolearn
+}
 
 # -------------------------------------------------------------------
 
