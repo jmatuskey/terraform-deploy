@@ -3,7 +3,7 @@ resource "aws_kms_key" "sops_key" {
   tags        = {
     Terraform = "True",
     # TODO: pull this out into a variable
-    Project = "roman-sit"
+    Project = var.project_name
   }
 }
 
