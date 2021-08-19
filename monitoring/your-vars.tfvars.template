@@ -2,6 +2,7 @@
 region = "us-east-1"
 
 rolename = "<DEPLOY-ROLE>"
+lambda_rolename = "<LAMBDA-ROLE>"
 
 # -------------------------------------------------------------------------
 #                     Networking config

@@ -7,6 +7,10 @@ variable "rolename" {
   type = string
 }
 
+variable "lambda_rolename" {
+  description = "The name of the lambda execution role"
+  type = string
+}
 
 # -------------------------------------------------------------------------
 #                     Networking config
