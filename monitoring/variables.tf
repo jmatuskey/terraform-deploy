@@ -7,10 +7,16 @@ variable "rolename" {
   type = string
 }
 
-variable "lambda_rolename" {
-  description = "The name of the lambda execution role"
+variable "lambda_rolearn" {
+  description = "The ARN of the lambda execution role"
   type = string
 }
+
+variable "user_home_efs_id" {
+  description = "ID of the user home data EFS volume"
+  type = string
+}
+
 
 # -------------------------------------------------------------------------
 #                     Networking config

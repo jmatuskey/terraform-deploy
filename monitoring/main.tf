@@ -5,7 +5,7 @@ module "lambda_shutdown_hub" {
   function_name = "shutdown-hub"
   description   = "Shut down JupyterHub by setting the EKS core nodegroup's ASG max size to 0"
   handler       = "shutdown_hub.lambda_handler"
-  runtime       = "python3.9"
+  runtime       = "python3.8"
 
   source_path = [
     {
@@ -27,14 +27,12 @@ module "lambda_shutdown_hub" {
 }
 
 
-
-#resource "aws_cloudwatch_event_target" "efs_exceeded_limit_target" {
-#  rule      = aws_cloudwatch_event_rule.refresh_cache_logs.name
-#  target_id = "lambda"
-#  arn       = module.lambda_shutdown_hub.this_lambda_function_arn
-#}
-
-
+resource "aws_cloudwatch_event_target" "efs_exceeded_limit_target" {
+  #depends_on = [module.lambda_shutdown_hub]
+  rule      = aws_cloudwatch_event_rule.efs_exceeded_limit_rule.name
+  target_id = "lambda"
+  arn       = module.lambda_shutdown_hub.this_lambda_function_arn
+}
 
 resource "aws_cloudwatch_metric_alarm" "efs_exceeded_limit_alarm" {
   alarm_name                = "efs_exceeded_limit"
@@ -42,15 +40,18 @@ resource "aws_cloudwatch_metric_alarm" "efs_exceeded_limit_alarm" {
   evaluation_periods        = "2"
   metric_name               = "StorageBytes"
   namespace                 = "AWS/EC2"
-  period                    = "5"
+  period                    = "60"
   statistic                 = "Sum"
   threshold                 = "80"
-  #insufficient_data_actions = []
+
+  dimensions = {
+    FileSystemId = var.user_home_efs_id
+  }
 }
 
 
-
-resource "aws_cloudwatch_event_rule" "efs_exceeded_limit" {
+# This is really an EventBridge rule
+resource "aws_cloudwatch_event_rule" "efs_exceeded_limit_rule" {
   name        = "efs_exceeded_limit"
 
   event_pattern = <<PATTERN
@@ -67,10 +68,7 @@ resource "aws_cloudwatch_event_rule" "efs_exceeded_limit" {
   "region": [
     "us-east-1"
   ],
-  "resources": [
-    efs_exceeded_limit_alarm.arn
-  ]
+  "resources": ["${aws_cloudwatch_metric_alarm.efs_exceeded_limit_alarm.arn}"]
 }
 PATTERN
 }
-

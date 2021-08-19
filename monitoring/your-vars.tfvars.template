@@ -4,6 +4,9 @@ region = "us-east-1"
 rolename = "<DEPLOY-ROLE>"
 lambda_rolename = "<LAMBDA-ROLE>"
 
+user_home_efs_id = "<USER-HOME-EFS-ID>"
+
+
 # -------------------------------------------------------------------------
 #                     Networking config
 
