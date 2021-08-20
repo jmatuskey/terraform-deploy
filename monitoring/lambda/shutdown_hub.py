@@ -12,7 +12,6 @@ def get_nodegroup(eks_client, cluster_name):
 
     return nodegroup
 
-
 def get_nodegroup_asg(eks_client, cluster_name, nodegroup):
     response = eks_client.describe_nodegroup(
         clusterName=cluster_name,
@@ -21,7 +20,6 @@ def get_nodegroup_asg(eks_client, cluster_name, nodegroup):
 
     return response['nodegroup']['resources']['autoScalingGroups'][0]['name']
 
-
 def update_asg(asg_client, asg_name):
     asg_client.update_auto_scaling_group(
         AutoScalingGroupName=asg_name,
@@ -29,7 +27,6 @@ def update_asg(asg_client, asg_name):
         MaxSize=0,
         DesiredCapacity=0
     )
-
 
 def lambda_handler(event, context):
     # TODO: can get cluster name somehow from input?

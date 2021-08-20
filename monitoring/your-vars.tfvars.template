@@ -2,7 +2,7 @@
 region = "us-east-1"
 
 rolename = "<DEPLOY-ROLE>"
-lambda_rolename = "<LAMBDA-ROLE>"
+lambda_rolearn = "<LAMBDA-ROLE-ARN>"
 
 user_home_efs_id = "<USER-HOME-EFS-ID>"
 

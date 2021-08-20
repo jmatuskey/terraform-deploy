@@ -6,6 +6,7 @@ module "lambda_shutdown_hub" {
   description   = "Shut down JupyterHub by setting the EKS core nodegroup's ASG max size to 0"
   handler       = "shutdown_hub.lambda_handler"
   runtime       = "python3.8"
+  #publish       = false
 
   source_path = [
     {
@@ -15,7 +16,7 @@ module "lambda_shutdown_hub" {
     },
   ]
 
-  # ensures that terraform doesn't try to mess with IAM
+  # Don't mess with IAM
   create_role = false
   attach_cloudwatch_logs_policy = false
   attach_dead_letter_policy = false
@@ -34,6 +35,7 @@ resource "aws_cloudwatch_event_target" "efs_exceeded_limit_target" {
   arn       = module.lambda_shutdown_hub.this_lambda_function_arn
 }
 
+
 resource "aws_cloudwatch_metric_alarm" "efs_exceeded_limit_alarm" {
   alarm_name                = "efs_exceeded_limit"
   comparison_operator       = "GreaterThanOrEqualToThreshold"
@@ -50,7 +52,7 @@ resource "aws_cloudwatch_metric_alarm" "efs_exceeded_limit_alarm" {
 }
 
 
-# This is really an EventBridge rule
+# This is really an EventBridge rule, they just haven't updated the API
 resource "aws_cloudwatch_event_rule" "efs_exceeded_limit_rule" {
   name        = "efs_exceeded_limit"
 
@@ -61,9 +63,6 @@ resource "aws_cloudwatch_event_rule" "efs_exceeded_limit_rule" {
   ],
   "source": [
     "aws.cloudwatch"
-  ],
-  "account": [
-    "328656936502"
   ],
   "region": [
     "us-east-1"
