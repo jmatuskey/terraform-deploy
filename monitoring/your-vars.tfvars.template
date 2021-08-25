@@ -1,4 +1,3 @@
-# Put your cluster where your data is
 region = "us-east-1"
 
 rolename = "<DEPLOY-ROLE>"

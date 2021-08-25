@@ -23,7 +23,7 @@ module "lambda_shutdown_hub" {
   description   = "Shut down JupyterHub by setting the EKS nodegroups' ASG max size to 0"
   handler       = "shutdown_hub.lambda_handler"
   runtime       = "python3.8"
-  cloudwatch_logs_retention_in_days = 30
+  cloudwatch_logs_retention_in_days = 365
 
   source_path = [
     {
