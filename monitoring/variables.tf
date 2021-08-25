@@ -16,3 +16,9 @@ variable "user_home_efs_id" {
   description = "ID of the user home data EFS volume"
   type = string
 }
+
+variable "cluster_name" {
+  description = "Name of the EKS cluster"
+  type = string
+}
+

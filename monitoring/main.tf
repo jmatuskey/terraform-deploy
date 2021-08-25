@@ -1,12 +1,30 @@
+
+# Set the cluster name in the lambda function code
+resource "null_resource" "modify_lambda_function" {
+  provisioner "local-exec" {
+    command = "sed -i \"s/cluster = '<terraform assigns this value>'/cluster = '${var.cluster_name}'/g\" lambda/shutdown_hub.py" 
+  }
+}
+
+# On destroy, checkout the unmodified lambda file
+resource "null_resource" "restore_lambda_function" {
+  provisioner "local-exec" {
+    command = "git checkout lambda/shutdown_hub.py"
+    when = destroy
+  }
+}
+
 module "lambda_shutdown_hub" {
+  depends_on = [null_resource.modify_lambda_function]
+
   source = "terraform-aws-modules/lambda/aws"
   version = "~> 1.43.0"
 
   function_name = "shutdown-hub"
-  description   = "Shut down JupyterHub by setting the EKS core nodegroup's ASG max size to 0"
+  description   = "Shut down JupyterHub by setting the EKS nodegroups' ASG max size to 0"
   handler       = "shutdown_hub.lambda_handler"
   runtime       = "python3.8"
-  cloudwatch_logs_retention_in_days = 60
+  cloudwatch_logs_retention_in_days = 30
 
   source_path = [
     {
@@ -43,6 +61,7 @@ resource "aws_cloudwatch_metric_alarm" "efs_exceeded_limit_alarm" {
   period                    = "60"
   statistic                 = "Sum"
   threshold                 = "11000000000"
+  treat_missing_data        = "ignore"
 
   dimensions = {
     FileSystemId = var.user_home_efs_id
