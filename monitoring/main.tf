@@ -1,4 +1,3 @@
-
 # Set the cluster name in the lambda function code
 resource "null_resource" "modify_lambda_function" {
   provisioner "local-exec" {
@@ -6,7 +5,7 @@ resource "null_resource" "modify_lambda_function" {
   }
 }
 
-# On destroy, checkout the unmodified lambda file
+# On destroy, restore the unmodified lambda file
 resource "null_resource" "restore_lambda_function" {
   provisioner "local-exec" {
     command = "git checkout lambda/shutdown_hub.py"
