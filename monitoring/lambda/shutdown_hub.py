@@ -1,16 +1,10 @@
 import boto3
 
 
-def get_nodegroup(eks_client, cluster_name):
+def get_nodegroups(eks_client, cluster_name):
     response = eks_client.list_nodegroups(clusterName=cluster_name)
 
-    nodegroup = None
-    for group in response['nodegroups']:
-        if 'core' in group:
-            nodegroup = group
-            break
-
-    return nodegroup
+    return response['nodegroups']
 
 def get_nodegroup_asg(eks_client, cluster_name, nodegroup):
     response = eks_client.describe_nodegroup(
@@ -37,9 +31,10 @@ def lambda_handler(event, context):
 
     return_code = 0
     try:
-        nodegroup = get_nodegroup(eks_client, cluster)
-        asg = get_nodegroup_asg(eks_client, cluster, nodegroup)
-        update_asg(asg_client, asg)
+        nodegroups = get_nodegroups(eks_client, cluster)
+        for group in nodegroups:
+            asg = get_nodegroup_asg(eks_client, cluster, group)
+            update_asg(asg_client, asg)
     except:
         return_code = 1
 

@@ -16,24 +16,3 @@ variable "user_home_efs_id" {
   description = "ID of the user home data EFS volume"
   type = string
 }
-
-
-# -------------------------------------------------------------------------
-#                     Networking config
-
-variable vpc_name {
-   description = "Name of unmanaged VPC, e.g. created by IT department."
-   type = string
-}
-
-variable private_subnet_names {
-   description = "Patterns applied to Name tag to select unmanaged private subnets from the unmanaged vpc"
-   type = list(string)
-   default = ["*DMZ*"]
-}
-
-variable public_subnet_names {
-   description = "Patterns applied to Name tag to select unmanaged public subnets from the unmanaged vpc"
-   type = list(string)
-   default = ["*Public*"]
-}
