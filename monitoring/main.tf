@@ -75,16 +75,15 @@ resource "aws_cloudwatch_event_rule" "efs_exceeded_limit_rule" {
 
   event_pattern = <<PATTERN
 {
-  "detail-type": [
-    "CloudWatch Alarm State Change"
-  ],
   "source": [
     "aws.cloudwatch"
   ],
-  "region": [
-    "us-east-1"
+  "detail-type": [
+    "CloudWatch Alarm State Change"
   ],
-  "resources": ["${aws_cloudwatch_metric_alarm.efs_exceeded_limit_alarm.arn}"]
+  "resources": [
+    "arn:aws:cloudwatch:us-east-1:328656936502:alarm:efs-exceeded-limit"
+  ]
 }
 PATTERN
 }
