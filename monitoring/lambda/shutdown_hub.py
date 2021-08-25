@@ -23,8 +23,7 @@ def update_asg(asg_client, asg_name):
     )
 
 def lambda_handler(event, context):
-    # TODO: can get cluster name somehow from input?
-    cluster = 'roman'
+    cluster = '<terraform assigns this value>'
 
     eks_client = boto3.client('eks')
     asg_client = boto3.client('autoscaling')
