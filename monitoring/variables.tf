@@ -22,3 +22,14 @@ variable "cluster_name" {
   type = string
 }
 
+variable "efs_threshold" {
+  description = "EFS size threshold in bytes"
+  type = string
+}
+
+# -------------------
+# SNS Topic variables
+
+
+
+
