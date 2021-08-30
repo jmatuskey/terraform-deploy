@@ -23,7 +23,7 @@ def update_asg(asg_client, asg_name):
     )
 
 def lambda_handler(event, context):
-    cluster = '<terraform assigns this value>'
+    cluster = os.environ.get('CLUSTER_NAME')
 
     eks_client = boto3.client('eks')
     asg_client = boto3.client('autoscaling')

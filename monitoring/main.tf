@@ -1,20 +1,5 @@
-# Set the cluster name in the lambda function code
-resource "null_resource" "modify_lambda_function" {
-  provisioner "local-exec" {
-    command = "sed -i \"s/cluster = '<terraform assigns this value>'/cluster = '${var.cluster_name}'/g\" lambda/shutdown_hub.py" 
-  }
-}
-
-# On destroy, restore the unmodified lambda file
-resource "null_resource" "restore_lambda_function" {
-  provisioner "local-exec" {
-    command = "git checkout lambda/shutdown_hub.py"
-    when = destroy
-  }
-}
-
 module "lambda_shutdown_hub" {
-  depends_on = [null_resource.modify_lambda_function]
+  #depends_on = [null_resource.modify_lambda_function]
 
   source = "terraform-aws-modules/lambda/aws"
   version = "~> 1.43.0"
@@ -41,6 +26,8 @@ module "lambda_shutdown_hub" {
   attach_async_event_policy = false
 
   lambda_role = var.lambda_rolearn
+
+  environment_variables = {CLUSTER_NAME = var.cluster_name}
 }
 
 
@@ -61,7 +48,7 @@ resource "aws_cloudwatch_metric_alarm" "efs_exceeded_limit_alarm" {
   statistic                 = "Sum"
   threshold                 = var.efs_threshold
   treat_missing_data        = "ignore"
-  alarm_actions             = ["${aws_cloudformation_stack.efs_exceeded_limit_sns_topic.outputs["ARN"]}"]
+  #alarm_actions             = ["${aws_cloudformation_stack.efs_exceeded_limit_sns_topic.outputs["ARN"]}"]
 
   dimensions = {
     FileSystemId = var.user_home_efs_id
