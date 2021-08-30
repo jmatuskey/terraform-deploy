@@ -59,8 +59,9 @@ resource "aws_cloudwatch_metric_alarm" "efs_exceeded_limit_alarm" {
   namespace                 = "AWS/EFS"
   period                    = "60"
   statistic                 = "Sum"
-  threshold                 = "11000000000"
+  threshold                 = var.efs_threshold
   treat_missing_data        = "ignore"
+  alarm_actions             = ["${aws_cloudformation_stack.efs_exceeded_limit_sns_topic.outputs["ARN"]}"]
 
   dimensions = {
     FileSystemId = var.user_home_efs_id
@@ -81,63 +82,3 @@ resource "aws_cloudwatch_event_rule" "efs_exceeded_limit_rule" {
 }
 PATTERN
 }
-
-
-# Inspired by https://medium.com/@raghuram.arumalla153/aws-sns-topic-subscription-with-email-protocol-using-terraform-ed05f4f19b73
-#
-# Note: there is no support for the email protocol in Terraform as of now, so to get around
-#       that limitation we create a CloudFormation stack to create the SNS topic
-data "template_file" "efs_exceeded_limit_cf_sns_stack" {
-  template = file("${path.module}/template/cf_aws_sns_email_stack.json.tpl")
-  vars = {
-    sns_topic_name        = "efs-exceeded-limit"
-    sns_display_name      = var.sns_topic_display_name
-    sns_subscription_list = join(
-      ",", formatlist(
-        "{\"Endpoint\": \"%s\",\"Protocol\": \"%s\"}",
-        var.sns_subscription_email_address_list,
-        var.sns_subscription_protocol
-      )
-    )
-  }
-}
-
-
-resource "aws_cloudformation_stack" "efs_exceeded_limit_sns_topic" {
-  name = "efs-exceeded-limit"
-  template_body = data.template_file.efs_exceeded_limit_cf_sns_stack.rendered
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

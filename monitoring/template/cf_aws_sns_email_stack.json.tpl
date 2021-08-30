@@ -10,5 +10,11 @@ TemplateFormatVersion": "2010-09-09",
         ]
       }
     }
+  },
+  "Outputs" : {
+    "ARN" : {
+      "Description" : "Email SNS Topic ARN",
+      "Value" : { "Ref" : "EmailSNSTopic" }
+    }
   }
 }
