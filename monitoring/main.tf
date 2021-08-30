@@ -1,6 +1,4 @@
 module "lambda_shutdown_hub" {
-  #depends_on = [null_resource.modify_lambda_function]
-
   source = "terraform-aws-modules/lambda/aws"
   version = "~> 1.43.0"
 
