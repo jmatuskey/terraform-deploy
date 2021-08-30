@@ -2,6 +2,10 @@ variable "region" {
   default = "us-east-1"
 }
 
+variable "account_id" {
+  type = string
+}
+
 variable "rolename" {
   description = "The name of the primary deployment role"
   type = string

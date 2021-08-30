@@ -25,7 +25,11 @@ module "lambda_shutdown_hub" {
 
   lambda_role = var.lambda_rolearn
 
-  environment_variables = {CLUSTER_NAME = var.cluster_name}
+  environment_variables = {
+    CLUSTER_NAME = var.cluster_name
+    ACCOUNT_ID = var.account_id
+    EFS_ID = var.user_home_efs_id
+  }
 }
 
 
