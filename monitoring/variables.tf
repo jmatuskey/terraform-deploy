@@ -30,3 +30,14 @@ variable "efs_threshold" {
   description = "EFS size threshold in bytes"
   type = string
 }
+
+variable "sender_email" {
+  description = "Email address of the sender for the lambda function"
+  type = string
+}
+
+variable "recipient_email" {
+  description = "Email address of the sender for the lambda function"
+  type = string
+}
+
