@@ -9,3 +9,5 @@ user_home_efs_id = "<USER-HOME-EFS-ID>"
 cluster_name = "<CLUSTER-NAME>"
 
 efs_threshold = "<SIZE-IN-BYTES>"
+
+recipient_emails = "<EMAIL, ...>"

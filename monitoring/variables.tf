@@ -31,13 +31,8 @@ variable "efs_threshold" {
   type = string
 }
 
-variable "sender_email" {
-  description = "Email address of the sender for the lambda function"
-  type = string
-}
-
-variable "recipient_email" {
-  description = "Email address of the sender for the lambda function"
+variable "recipient_emails" {
+  description = "Email addresss of the SNS recipients from the lambda function"
   type = string
 }
 

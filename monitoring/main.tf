@@ -29,8 +29,7 @@ module "lambda_shutdown_hub" {
     CLUSTER_NAME = var.cluster_name
     ACCOUNT_ID = var.account_id
     EFS_ID = var.user_home_efs_id
-    SENDER_EMAIL = var.sender_email
-    RECIPIENT_EMAIL = var.sender_email
+    RECIPIENT_EMAILS = var.recipient_emails
   }
 }
 
