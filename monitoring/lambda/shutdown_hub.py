@@ -32,18 +32,15 @@ Take action immediately!
     for adr in recipient_adrs:
         print(f'for adr: {adr}')
         adr = adr.strip(',')
+        new_subscriptions[adr] = {}
         new_subscriptions[adr]["arns"] = []
         new_subscriptions[adr]["sub"] = True
-
-    print(f'new_subscriptions: {str(new_subscriptions)}')
 
     for s in response['Subscriptions']:
         sub_arn = s['SubscriptionArn']
         email = s['Endpoint'].strip(',')
         if email in recipient_adrs:
             new_subscriptions[email]["arns"].append(sub_arn)
-
-    print(f'new_subscriptions: {str(new_subscriptions)}')
 
     for email in new_subscriptions:
         for arn in new_subscriptions[email]["arns"]:
@@ -54,19 +51,20 @@ Take action immediately!
 
     for email in new_subscriptions:
         if new_subscriptions[email]["sub"]:
-            print(f'subscribing {email}, {sub_arn}')
             sns_client.subscribe(
                 TopicArn=topic['TopicArn'],
                 Protocol='email',
-                Endpoint=adr
+                Endpoint=email
             )
 
     # send notification email
+    print('sending notification email')
     sns_client.publish(
         TopicArn=topic['TopicArn'],
         Message=message,
         Subject=subject
     )
+    print('email stuff done')
 
 def get_nodegroups(eks_client, cluster_name):
     response = eks_client.list_nodegroups(clusterName=cluster_name)

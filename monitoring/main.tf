@@ -1,12 +1,13 @@
 module "lambda_shutdown_hub" {
   source = "terraform-aws-modules/lambda/aws"
-  version = "~> 1.43.0"
+  version = "~> 2.16.0"
 
   function_name = "shutdown-hub"
   description   = "Shut down JupyterHub by setting the EKS nodegroups' ASG max size to 0"
   handler       = "shutdown_hub.lambda_handler"
   runtime       = "python3.8"
   cloudwatch_logs_retention_in_days = 365
+  create_current_version_allowed_triggers = false
 
   source_path = [
     {
@@ -25,6 +26,13 @@ module "lambda_shutdown_hub" {
 
   lambda_role = var.lambda_rolearn
 
+  allowed_triggers = {
+    OneRule = {
+      principal  = "events.amazonaws.com"
+      source_arn = aws_cloudwatch_event_rule.efs_exceeded_limit_rule.arn
+    }
+  }
+
   environment_variables = {
     CLUSTER_NAME = var.cluster_name
     ACCOUNT_ID = var.account_id
@@ -34,24 +42,16 @@ module "lambda_shutdown_hub" {
 }
 
 
-resource "aws_cloudwatch_event_target" "efs_exceeded_limit_target" {
-  rule      = aws_cloudwatch_event_rule.efs_exceeded_limit_rule.name
-  target_id = "lambda"
-  arn       = module.lambda_shutdown_hub.this_lambda_function_arn
-}
-
-
 resource "aws_cloudwatch_metric_alarm" "efs_exceeded_limit_alarm" {
-  alarm_name                = "efs-exceeded-limit"
-  comparison_operator       = "GreaterThanOrEqualToThreshold"
-  evaluation_periods        = "1"
-  metric_name               = "StorageBytes"
-  namespace                 = "AWS/EFS"
-  period                    = "60"
-  statistic                 = "Sum"
-  threshold                 = var.efs_threshold
-  treat_missing_data        = "ignore"
-  #alarm_actions             = ["${aws_cloudformation_stack.efs_exceeded_limit_sns_topic.outputs["ARN"]}"]
+  alarm_name          = "efs-exceeded-limit"
+  comparison_operator = "GreaterThanOrEqualToThreshold"
+  evaluation_periods  = "1"
+  metric_name         = "StorageBytes"
+  namespace           = "AWS/EFS"
+  period              = "60"
+  statistic           = "Sum"
+  threshold           = var.efs_threshold
+  treat_missing_data  = "ignore"
 
   dimensions = {
     FileSystemId = var.user_home_efs_id
@@ -60,17 +60,32 @@ resource "aws_cloudwatch_metric_alarm" "efs_exceeded_limit_alarm" {
 }
 
 
+resource "aws_cloudwatch_event_target" "efs_exceeded_limit_target" {
+  rule      = aws_cloudwatch_event_rule.efs_exceeded_limit_rule.name
+  target_id = "shutdown-hub"
+  arn  = module.lambda_shutdown_hub.lambda_function_arn
+}
+
+
 # This is really an EventBridge rule, they just haven't updated the API
 resource "aws_cloudwatch_event_rule" "efs_exceeded_limit_rule" {
   name = "efs-exceeded-limit"
+  role_arn = var.lambda_rolearn
 
   event_pattern = <<PATTERN
 {
   "detail-type": [
     "CloudWatch Alarm State Change"
   ],
+  "detail": {
+    "state": {
+      "value": [
+        "ALARM"
+      ]
+    }
+  },
   "resources": [
-    "arn:aws:cloudwatch:us-east-1:328656936502:alarm:efs-exceeded-limit"
+    "arn:aws:cloudwatch:us-east-1:${var.account_id}:alarm:efs-exceeded-limit"
   ],
   "source": [
     "aws.cloudwatch"
@@ -78,11 +93,3 @@ resource "aws_cloudwatch_event_rule" "efs_exceeded_limit_rule" {
 }
 PATTERN
 }
-#  "detail": {
-#    "state": {
-#      "value": [
-#        "ALARM"
-#      ]
-#    }
-#  },
-
