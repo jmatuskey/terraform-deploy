@@ -13,7 +13,7 @@ resource "aws_security_group" "home_dirs_sg" {
 
   # NFS
   ingress {
-    cidr_blocks = local.private_subnet_cidrs
+    cidr_blocks = concat(local.private_subnet_cidrs, local.ci_subnet_cidrs) 
     security_groups = [ module.eks.worker_security_group_id ]
     from_port        = 2049
     to_port          = 2049
@@ -73,4 +73,22 @@ resource "helm_release" "efs-provisioner" {
     name = "efsProvisioner.provisionerName"
     value = "aws.amazon.com/efs"
   }
+}
+
+resource "kubernetes_persistent_volume_claim" "preloaded-fits" {
+  metadata {
+    name = "preloaded-fits"
+  }
+  spec {
+    access_modes = ["ReadWriteMany"]
+    resources {
+      requests = {
+        storage = "5Gi"
+      }
+    }
+    storage_class_name = "aws-efs"
+  }
+  depends_on = [
+    helm_release.efs-provisioner
+  ]
 }
