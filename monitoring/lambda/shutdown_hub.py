@@ -18,16 +18,12 @@ Take action immediately!
         Name=f'efs-exeeded-size-limit-{cluster_name}'
     )
 
-    print(f"topic ARN: {topic['TopicArn']}")
-    print(recipient_adrs)
-
     # get existing subscriptions
     response = sns_client.list_subscriptions_by_topic(
         TopicArn=topic['TopicArn']
     )
 
-    print(response)
-
+    # send subscription confirmation emails for new registrants
     new_subscriptions = {}
     for adr in recipient_adrs:
         print(f'for adr: {adr}')
@@ -47,8 +43,6 @@ Take action immediately!
             if 'arn:aws:sns' in arn:
                  new_subscriptions[email]["sub"] = False
 
-    print(f'new_subscriptions: {str(new_subscriptions)}')
-
     for email in new_subscriptions:
         if new_subscriptions[email]["sub"]:
             sns_client.subscribe(
@@ -57,14 +51,11 @@ Take action immediately!
                 Endpoint=email
             )
 
-    # send notification email
-    print('sending notification email')
     sns_client.publish(
         TopicArn=topic['TopicArn'],
         Message=message,
         Subject=subject
     )
-    print('email stuff done')
 
 def get_nodegroups(eks_client, cluster_name):
     response = eks_client.list_nodegroups(clusterName=cluster_name)
