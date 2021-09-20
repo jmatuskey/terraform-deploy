@@ -6,7 +6,6 @@ resource "aws_efs_file_system" "home_dirs" {
   encrypted = true
 }
 
-
 resource "aws_security_group" "home_dirs_sg" {
   name   = "${var.cluster_name}-home_dirs_sg"
   vpc_id = local.vpc_id
@@ -21,8 +20,6 @@ resource "aws_security_group" "home_dirs_sg" {
   }
 }
 
-
-# XXXX should the EFS subnets be public or private?
 resource "aws_efs_mount_target" "home_dirs_targets" {
   depends_on = [null_resource.kubectl_config]
   count = length(local.private_subnet_ids)
@@ -41,11 +38,10 @@ resource "helm_release" "efs-provisioner" {
   depends_on = [null_resource.kubectl_config, module.eks]
   name = "${var.cluster_name}-efs-provisioner"
   namespace = kubernetes_namespace.support.metadata.0.name
-  
   timeout = 600
-  repository = "https://charts.helm.sh/stable" 
+  repository = "https://isotoma.github.io/charts" 
   chart = "efs-provisioner"
-  version = "0.11.0"
+  version = "0.13.3"
 
   set{
     name = "efsProvisioner.efsFileSystemId"
