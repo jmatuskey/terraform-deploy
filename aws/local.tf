@@ -10,6 +10,8 @@ locals {
        private_subnet_cidrs = [for s in data.aws_subnet.private : s.cidr_block]
        private_subnet_names = [for s in data.aws_subnet.private : s.tags["Name"]]
 
+       ci_subnet_cidrs = tolist([data.aws_ssm_parameter.ci_1a_cidr.value, data.aws_ssm_parameter.ci_1b_cidr.value, data.aws_ssm_parameter.ci_1c_cidr.value])
+
        vpc_id = data.aws_vpc.unmanaged[0].id
 
        rolearn = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/${var.username}"
