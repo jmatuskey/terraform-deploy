@@ -2,6 +2,7 @@ resource "aws_efs_file_system" "home_dirs" {
   depends_on = [null_resource.kubectl_config]
   tags = {
     Name = "${var.cluster_name}-home-dirs"
+    "stsci-backup" = "dmd-2w-sat"
   }
   encrypted = true
 }
