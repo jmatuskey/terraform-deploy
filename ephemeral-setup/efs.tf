@@ -1,10 +1,18 @@
-resource "aws_efs_file_system" "home_dirs" {
-  depends_on = [null_resource.kubectl_config]
+# - resource "aws_efs_file_system" "home_dirs" {
+# -   depends_on = [null_resource.kubectl_config]
+# -   tags = {
+# -     Name = "${var.cluster_name}-home-dirs"
+# -     "stsci-backup" = "dmd-2w-sat"
+# -   }
+# -   encrypted = true
+# - }
+
+
+# The actual EFS home dirs file system is now built during one time setup.
+data "aws_efs_file_system" "home_dirs" {
   tags = {
     Name = "${var.cluster_name}-home-dirs"
-    "stsci-backup" = "dmd-2w-sat"
   }
-  encrypted = true
 }
 
 resource "aws_security_group" "home_dirs_sg" {
@@ -24,7 +32,7 @@ resource "aws_security_group" "home_dirs_sg" {
 resource "aws_efs_mount_target" "home_dirs_targets" {
   depends_on = [null_resource.kubectl_config]
   count = length(local.private_subnet_ids)
-  file_system_id = aws_efs_file_system.home_dirs.id
+  file_system_id = data.aws_efs_file_system.home_dirs.id
   subnet_id = local.private_subnet_ids[count.index]
   security_groups = [ aws_security_group.home_dirs_sg.id ]
 }
@@ -46,7 +54,7 @@ resource "helm_release" "efs-provisioner" {
 
   set{
     name = "efsProvisioner.efsFileSystemId"
-    value = aws_efs_file_system.home_dirs.id
+    value = data.aws_efs_file_system.home_dirs.id
   }
 
   set {

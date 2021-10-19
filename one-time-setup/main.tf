@@ -21,7 +21,7 @@ provider "aws" {
 }
 
 resource "aws_codecommit_repository" "secrets_repo" {
-  repository_name = var.repo_name
+  repository_name = "${var.cluster_name}-secrets"
   description     = "kms encrypted secrets for JupyterHub deployment"
   tags            = {
     Owner = var.owner_tag,
