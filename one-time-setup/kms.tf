@@ -1,5 +1,5 @@
 resource "aws_kms_key" "sops_key" {
-  description = "Encryption key for secrets in CodeCommit repo ${local.cluster_name}-secrets"
+  description = "Encryption key for secrets in CodeCommit repo ${var.cluster_name}-secrets"
   tags        = {
     Terraform = "True",
     Project = var.cluster_name
