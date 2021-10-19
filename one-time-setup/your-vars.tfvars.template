@@ -1,0 +1,7 @@
+region = "us-east-1"
+
+deployment_name = "e.g. tike, roman, jwebbinar, ..."
+environment = "e.g. dev, test, prod, ..."
+
+owner_tag = "<mission-name>" # e.g. Roman
+
