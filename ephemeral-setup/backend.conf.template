@@ -1,3 +1,3 @@
-bucket = "<deployment-name>-tfstate"
-key = "tfstate/<deployment-name>"
+bucket = "<deployment-name>-tfstate-<env>"
+key = "tfstate/<deployment-name>-ephemeral-setup.tfstate"
 region = "us-east-1"
