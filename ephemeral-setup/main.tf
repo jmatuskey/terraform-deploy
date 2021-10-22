@@ -42,9 +42,9 @@ module "eks" {
 
   node_groups = {
     core = {
-      desired_capacity = 1
+      desired_capacity = 3
       max_capacity     = 3
-      min_capacity     = 1
+      min_capacity     = 3
 
       instance_types = ["t3.small"]
       k8s_labels    = {
@@ -95,4 +95,3 @@ resource "null_resource" "kubectl_config" {
      command="aws eks update-kubeconfig --name ${var.cluster_name} --role-arn ${local.rolearn}"
   }
 }
-
