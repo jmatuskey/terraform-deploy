@@ -1,3 +1,0 @@
-bucket = "<deployment-name>-tfstate"
-key = "tfstate/<deployment-name>-kms-codecommit.tfstate"
-region = "us-east-1"
