@@ -1,3 +1,3 @@
-bucket = "<deployment-name>-tfstate"
+bucket = "<deployment-name>-tfstate-<env-name>"
 key = "tfstate/<deployment-name>-monitoring.tfstate"
 region = "us-east-1"
