@@ -8,6 +8,7 @@ user_home_efs_id = "<USER-HOME-EFS-ID>"
 
 cluster_name = "<CLUSTER-NAME>"
 
-efs_threshold = "<SIZE-IN-BYTES>" # 54975599628385 = 50 TB
+# 54975599628385 = 50 TB; this is a number, don't use quotes
+efs_threshold = <SIZE-IN-BYTES>
 
 recipient_emails = "<EMAIL, ...>"

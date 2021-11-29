@@ -28,7 +28,7 @@ variable "cluster_name" {
 
 variable "efs_threshold" {
   description = "EFS size threshold in bytes"
-  type = string
+  type = number
 }
 
 variable "recipient_emails" {
