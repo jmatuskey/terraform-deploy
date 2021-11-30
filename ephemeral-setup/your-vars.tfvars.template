@@ -32,7 +32,7 @@ worker_sg_name = "jupyterhub-worker-sg"   # "user-worker-sg" modeled after Addit
 
 # cluster_name-environment     min      desired   max        instance_type
 # Defaults                     1        1         10         r5.xlarge
-# Tike PROD                    4        4         60         r5.xlarge
+# Tike PROD                    4        4         50         r5.xlarge
 # Tike TEST                    1        1         10         r5.xlarge
 # Tike DEV                     1        1         10         r5.xlarge
 # Jwebbinar DEV                1        1         10         r5.2xlarge
