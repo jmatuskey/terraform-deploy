@@ -12,6 +12,6 @@ awsu aws autoscaling update-auto-scaling-group --auto-scaling-group-name <CORE-A
 awsu aws autoscaling update-auto-scaling-group --auto-scaling-group-name <NOTEBOOK-ASG-NAME> --min-size 1 --max-size 80 --desired-capacity 2
 
 # Reset EKS nodegroups
-awsu aws eks update-nodegroup-config --cluster-name <DEPLOYMENT> --nodegroup-name <CORE-NODEGROUP-NAME> --scaling-config minSize=3,maxSize=4,desiredSize=3`
-awsu aws eks update-nodegroup-config --cluster-name <DEPLOYMENT> --nodegroup-name <NOTEBOOK-NODEGROUP-NAME> --scaling-config minSize=1,maxSize=80,desiredSize=3`
+awsu aws eks update-nodegroup-config --cluster-name <DEPLOYMENT> --nodegroup-name <CORE-NODEGROUP-NAME> --scaling-config minSize=3,maxSize=4,desiredSize=3
+awsu aws eks update-nodegroup-config --cluster-name <DEPLOYMENT> --nodegroup-name <NOTEBOOK-NODEGROUP-NAME> --scaling-config minSize=1,maxSize=80,desiredSize=3
 ```
