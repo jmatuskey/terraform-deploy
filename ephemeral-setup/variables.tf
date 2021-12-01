@@ -85,6 +85,25 @@ variable notebook_instance_type {
    default = "r5.xlarge"
 }
 
+variable notebook_desired_capacity {
+   description = "Initial setting of autoscaler desired instance count for notebook nodes,  autoscaler periodically adjusts for current load."
+   type = number
+   default = 1
+}
+
+variable notebook_min_capacity {
+   description = "Minimum number of notebook nodes,  autoscaler won't drop below this regardless of usage."
+   type = number
+   default = 1
+}
+
+variable notebook_max_capacity {
+   description = "Maximum number of notebook nodes,  autoscaler won't exceed this regardless of usage."
+   type = number
+   default = 10
+}
+
+
 # ========================================================================
 variable allowed_roles {
     default = []

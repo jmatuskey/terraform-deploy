@@ -25,3 +25,25 @@ cluster_sg_name = "jupyterhub-cluster-sg"  # "user-cluster-sg" modeled after Add
 # Assign your CI-node to jupyerhub-cluster-sg before running Terraform.
 
 worker_sg_name = "jupyterhub-worker-sg"   # "user-worker-sg" modeled after Additional worker sg source group
+
+# ============================================================================================================
+
+# Notebook nodegroup default non-webbinar configurations;  webbinars are normally scaled up manually
+
+# cluster_name-environment     min      desired   max        instance_type
+# Defaults                     1        1         10         r5.xlarge
+# Tike PROD                    4        4         50         r5.xlarge
+# Tike TEST                    1        1         10         r5.xlarge
+# Tike DEV                     1        1         10         r5.xlarge
+# Jwebbinar DEV                1        1         10         r5.2xlarge
+# Roman DEV                    1        1         10         r5.xlarge
+# Roman TEST                   1        1         10         r5.xlarge
+# Roman OPS                    1        1         10         r5.xlarge
+
+# Specify these if you don't want the generic defaults:
+
+#notebook_instance_type = "r5.xlarge"
+#notebook_max_capacity = <max count>
+#notebook_min_capacity = <min count>
+#notebook_desired_capacity = <desired count>
+

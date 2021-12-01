@@ -55,9 +55,9 @@ module "eks" {
       iam_role_arn = data.aws_iam_role.worker_role.arn
     }
     notebook = {
-     desired_capacity = 1
-     max_capacity     = 10
-     min_capacity     = 1
+     desired_capacity = var.notebook_desired_capacity
+     max_capacity     = var.notebook_max_capacity
+     min_capacity     = var.notebook_min_capacity
 
      instance_types = [var.notebook_instance_type]
      k8s_labels = {
